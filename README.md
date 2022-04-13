@@ -49,7 +49,7 @@ The core functionality of reading and identifying information is provided by a [
 ### Cleaning the inputs
 The papers being analyzed were mostly in PDF format which can be difficult for a machine to read properly because of non-standard layouts. These were imported into GATE and automatically processed into plaintext. These would be full of irregularities that made it difficult for GATE to identify individual sentences, so further processing was done by **regular expressions** in a **Java** application to:
   * join words that were separated across a line break;
-  * remove line breaks within a sentenc;
+  * remove line breaks within a sentence;
   * to separate headings (e.g., "Abstract", "Conclusion") from surrounding sentences;
   * etc.
 This produced a "flatter" plaintext document that was much more machine-readable. Basic initial GATE processing includes identifying all individual words and sentences and annotating parts of speech, numbers, dates, proper nouns, locations, and orthography. 
@@ -69,10 +69,12 @@ The difficulty in identifying asthamgens in the text is that we're looking for t
     * 640,878 entries
 
 Wherever each chemical or biological agent was found in the text, it was annotated with an identifier for the database it came from (i.e., ChEBI ID, BRENDA ID, or Wikidate Entity Identifier) which could be used to generate a direct link in the output summary for more information.  
-
-![image](https://user-images.githubusercontent.com/43970162/163240859-605beeb1-df8e-40fd-9e8e-68ffeb5bcda4.png)
-
-
+  
+<figure>
+  <img src="https://user-images.githubusercontent.com/43970162/163240859-605beeb1-df8e-40fd-9e8e-68ffeb5bcda4.png">
+  <figcaption>Caption: An example of a potential chemical asthmagen annotated with its ChEBI ID</figcaption>
+</figure>
+  
 #### Occupational contexts
 A list of job titles was created from two major sources:
   * Statistics Canada’s [National Occupational Classification](https://noc.esdc.gc.ca/)
@@ -81,6 +83,12 @@ A list of job titles was created from two major sources:
     * ~33,000 job titles, each annotated with a 6-digit SOC code
 
 These required extensive processing and manual review to generate well-formatted lists, e.g., changing "foreman/woman" into separate entries for "foreman" and "forewoman", separating "chief executive officer (CEO)" into two separate entries, and other more subtle issues.
+
+The NOC and SOC codes can be used to generate a link to their respective databases with more details about the occupation.
+
+![image](https://user-images.githubusercontent.com/43970162/163242254-00ebaff8-4a16-4703-9871-e409fb7ee92f.png)
+
+Caption: An example of an occupation annotated with its SOC code
 
 ### Other relevant phrases
 Important sentences were identified based on key phrases related to the specific problem domain:
@@ -100,9 +108,46 @@ Important sentences were identified based on key phrases related to the specific
   
 Provided these gazetteers, GATE can annotate each sentence with the category of word or phrase that it contains. 
 
+<center>
+  
 ![image](https://user-images.githubusercontent.com/43970162/163240439-8043dfba-151e-4ae4-95b4-d74eb3e6fb30.png)
 
+  Caption: An example of annotations generated from the gazetteers
+  
+</center>
 
 
+### Defining grammars of important phrases
+
+**JAPE (Java Annotations Pattern Engine)** is a  component of GATE that allows for defining grammars based on annotations that GATE has made in the text. JAPE allows annotations to be analyzed as components of regular expressions and then adds new annotations over matching strings, according to the JAPE rules defined. Tthe manually selected target sentences were examined for common patterns, and these patterns were encoded in JAPE rules to define the grammar of valuable, informative sentences.
 
 
+Results:
+===
+![image](https://user-images.githubusercontent.com/43970162/163243870-9db9b71f-a1b5-417c-a0cc-388e7e46853c.png)
+
+Caption: an example of sentences selected for inclusion in the summary, including confirmation of diagnosis, chemical cause, and occupational context. 
+
+Total processing time was < 1 second per paper. 
+
+| Precision | Recall | F<sub>1</sub>-score | F<sub>3</sub>-score |
+|-----------|--------|---------------------|---------------------|
+| 0.3515    | 0.7344 | 0.4754              | 0.6622              |
+
+Future Work:
+===
+
+The gazetteers are useful for easily developing other tools related to occupational health. A tool could be developed to search all PubMed abstracts for references to jobs associated with a particular SOC or NOC code.
+
+The entire application could be fairly easily repurposed for other occupational diseases. In general, the application looks for text that describes **[ASTHMA] caused by exposure to [AGENT] in [OCCUPATION]**. The references to asthma and its related medical and clinical terms only consist of 124 total terms. An expert in a particular disease may be able to generate their own lists, plug them into this application, and run it with minimal modification. 
+
+This tool could be used to address Phase 2 mentioned earlier (narrowing down the large database search to only those papers that are relevant). Processing them with the same types of annotations may lead to a consistent way to identify which are relevant and which are not. 
+
+Critical Commentary:
+===
+
+Developing my skills with regular expressions was very helpful and I look forward to using them more. I was glad to see how they could be applied to abstractions like annotation patterns rather than plaintext. 
+
+Language processing has come to mean a lot to me. It has always bothered me that there must be so much useful information written but it's simply too much of a task for anyone to make use of it all. I was glad for the chance to address that problem, even in a small way.
+
+Language processing on scientific papers can be particularly effective. Not just because the results can be so useful, but the style is suitable for more rigid analysis, unlike more natural language. Compared to other types of writing, very little of the writer's perosonality and idiosyncracies comes through in scientific writing. 
