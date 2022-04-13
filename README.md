@@ -46,6 +46,9 @@ Approach:
 
 The core functionality of reading and identifying information is provided by a [GATE (General Architecture for Text Engineering)](https://gate.ac.uk/) application. 
 
+![image](https://user-images.githubusercontent.com/43970162/163248260-26b762c6-0f35-42d0-a268-471efe5fba81.png)
+
+
 ### Cleaning the inputs
 The papers being analyzed were mostly in PDF format which can be difficult for a machine to read properly because of non-standard layouts. These were imported into GATE and automatically processed into plaintext. These would be full of irregularities that made it difficult for GATE to identify individual sentences, so further processing was done by **regular expressions** in a **Java** application to:
   * join words that were separated across a line break;
